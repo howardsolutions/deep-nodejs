@@ -1,4 +1,4 @@
-const EventEmitter = require('events');
+const EventEmitter = require('./events-implement');
 
 class Emitter extends EventEmitter {}
 
@@ -16,4 +16,12 @@ myEvent.on('foo', (someText) => {
   console.log('Event with argument occured: ' + someText);
 });
 
+myEvent.once('bar', () => {
+  console.log('Im only run once');
+});
+
 myEvent.emit('foo', 'hello');
+myEvent.emit('bar');
+myEvent.emit('bar');
+myEvent.emit('bar');
+myEvent.emit('bar');
