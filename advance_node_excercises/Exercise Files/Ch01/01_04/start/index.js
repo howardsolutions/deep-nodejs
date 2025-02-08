@@ -1,21 +1,5 @@
 // var { promisify } = require('util');
 
-function promisify(fn) {
-  return function(...args) {
-    return new Promise((resolve, reject) => {
-      function customCallback(err, result) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      }
-
-      fn.call(this, ...args, customCallback);
-    });
-  };
-}
-
 var delay = (seconds, callback) => {
   if (seconds > 3) {
     callback(new Error(`${seconds} seconds it too long!`));
@@ -38,3 +22,19 @@ var delay = (seconds, callback) => {
 const promiseDelay = promisify(delay);
 
 promiseDelay(2).then(console.log).catch(console.error);
+
+function promisify(fn) {
+  return function (...args) {
+    return new Promise((resolve, reject) => {
+      function customCallback(err, result) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      }
+
+      fn.call(this, ...args, customCallback);
+    });
+  };
+}
