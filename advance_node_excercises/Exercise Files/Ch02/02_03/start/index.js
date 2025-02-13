@@ -20,4 +20,6 @@ process.stdin.on('data', (chunk) => {
     // continue go back to the normal flowing mode
     readStream.resume();
   }
+
+  readStream.read();
 });
