@@ -43,6 +43,7 @@ const server = createServer((req, res) => {
   } else if (req.url === '/video') {
     responseWithVideo(req, res);
   } else {
+    // for / route
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end(`
       <form enctype="multipart/form-data" method="POST" action="/">
