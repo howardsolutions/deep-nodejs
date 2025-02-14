@@ -1,13 +1,13 @@
 const { createServer } = require('http');
 
-const { createReadStream, stat } = require('fs');
+const { createReadStream, stat, createWriteStream } = require('fs');
 const { promisify } = require('util');
 
 const getFileInfo = promisify(stat);
 
 const fileName = '../../../powder-day.mp4';
 
-const server = createServer(async (req, res) => {
+async function responseWithVideo(req, res) {
   const { size } = await getFileInfo(fileName);
 
   const range = req.rawHeaders.range;
@@ -25,13 +25,31 @@ const server = createServer(async (req, res) => {
     end = end ? parseInt(end, 10) : size - 1;
 
     res.writeHead(206, {
+      'content-type': 'video/mp4',
+      'accept-ranges': 'bytes',
       'content-length': end - start + 1,
       'content-range': `bytes ${start}-${end}/${size}`,
-      'accept-ranges': 'bytes',
-      'content-type': 'video/mp4',
     });
 
     createReadStream(fileName, { start, end }).pipe(res);
+  }
+}
+
+const server = createServer((req, res) => {
+  if (req.method === 'POST') {
+    req.pipe(res);
+    req.pipe(process.stdout);
+    req.pipe(createWriteStream('./upload.file'));
+  } else if (req.url === '/video') {
+    responseWithVideo(req, res);
+  } else {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(`
+      <form enctype="multipart/form-data" method="POST" action="/">
+        <input type="file" name="upload-file" />
+        <button>Upload File</button>
+      </form>
+    `);
   }
 });
 
