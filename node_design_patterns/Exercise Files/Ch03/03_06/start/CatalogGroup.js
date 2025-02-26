@@ -14,6 +14,8 @@ class CatalogGroup {
   }
 
   print() {
+    console.log(`Group Product name: ${this.name}`);
+    
     for (let item of this.items) {
       const { name, price } = item;
       console.log(`Product name: ${name} and price: ${price}`);
