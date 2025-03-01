@@ -29,7 +29,7 @@ process.stdin.on('keypress', (str, key) => {
             break;
 
         case 'left' :
-            inventory.prev().writeLn();
+            inventory.prev()?.writeLn();
             break;
 
         case 'down' :
