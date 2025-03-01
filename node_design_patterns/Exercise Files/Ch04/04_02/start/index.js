@@ -1,5 +1,5 @@
 var Store = require('./Store');
-var inventory = require('./inventory');
+var inventory = require('./inventory.json');
 
 var skiShop = new Store('Steep and Deep', inventory);
 
