@@ -1,5 +1,7 @@
 const fs = require('fs/promises');
 
+const CREATE_A_FILE = 'create a file';
+
 (async () => {
   // OPEN the file
   const commandFileHandler = await fs.open('./command.txt', 'r');
@@ -23,7 +25,14 @@ const fs = require('fs/promises');
       position
     );
 
-    console.log(commandFileContent);
+    const command = buffer.toString('utf-8');
+
+    // Create a File: <create a file <path> >
+
+    if (command.includes(CREATE_A_FILE)) {
+      const filePath = command.substring(CREATE_A_FILE.length + 1);
+      await createFile(filePath);
+    }
   });
 
   // WATCHER - watch for a change in a file
@@ -33,6 +42,19 @@ const fs = require('fs/promises');
     // File Changed! READ file content
     if (event.eventType === 'change') {
       commandFileHandler.emit('change');
+    }
+  }
+
+  // Create File Fn
+  async function createFile(filePath) {
+    try {
+      await fs.writeFile(filePath, '', { flag: 'wx' });
+      console.log(`File created successfully at: ${filePath}`);
+    } catch (err) {
+      if (err.code === 'EEXIST') {
+        throw new Error(`File already exists at: ${filePath}`);
+      }
+      throw err; // Re-throw any other errors
     }
   }
 })();
