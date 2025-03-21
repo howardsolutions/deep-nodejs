@@ -99,7 +99,18 @@ const ADD_TO_FILE = 'add to the file';
   }
 
   // rename file
-  async function renameFile(oldPath, newPath) {}
+  async function renameFile(oldPath, newPath) {
+    try {
+      await fs.rename(oldPath, newPath);
+      console.log(`File renamed successfully from ${oldPath} to ${newPath}`);
+    } catch (err) {
+      if (err.code === 'ENOENT') {
+        console.log(`File does not exist at: ${oldPath}`);
+      } else if (err.code === 'EEXIST') {
+        console.log(`A file already exists at: ${newPath}`);
+      }
+    }
+  }
 
   // Add Content to file
   async function addToFile(path, content) {}

@@ -1,1 +1,1 @@
-delete a file text.txt
+rename the file text.txt to text2.txt
