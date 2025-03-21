@@ -77,14 +77,26 @@ const ADD_TO_FILE = 'add to the file';
       console.log(`File created successfully at: ${filePath}`);
     } catch (err) {
       if (err.code === 'EEXIST') {
-        throw new Error(`File already exists at: ${filePath}`);
+        console.log(`File already exists at: ${filePath}`);
       }
-      throw err; // Re-throw any other errors
     }
   }
 
   // delete File
-  async function deleteFile(filePath) {}
+  async function deleteFile(filePath) {
+    try {
+      // Check if file exists first
+      await fs.stat(filePath);
+
+      // If file exists, delete it
+      await fs.unlink(filePath);
+      console.log(`File deleted successfully: ${filePath}`);
+    } catch (err) {
+      if (err.code === 'ENOENT') {
+        console.log(`File does not exist at: ${filePath} to delete`);
+      }
+    }
+  }
 
   // rename file
   async function renameFile(oldPath, newPath) {}
