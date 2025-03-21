@@ -1,6 +1,9 @@
 const fs = require('fs/promises');
 
 const CREATE_A_FILE = 'create a file';
+const DELETE_A_FILE = 'delete a file';
+const RENAME_FILE = 'rename the file';
+const ADD_TO_FILE = 'add to the file';
 
 (async () => {
   // OPEN the file
@@ -28,10 +31,32 @@ const CREATE_A_FILE = 'create a file';
     const command = buffer.toString('utf-8');
 
     // Create a File: <create a file <path> >
-
     if (command.includes(CREATE_A_FILE)) {
       const filePath = command.substring(CREATE_A_FILE.length + 1);
       await createFile(filePath);
+    }
+
+    // Create a File: <delete a file <path> >
+    if (command.includes(DELETE_A_FILE)) {
+      const filePath = command.substring(DELETE_A_FILE.length + 1);
+      await deleteFile(filePath);
+    }
+
+    // Create a File: <add to the file <path> this content: <content> >
+    if (command.includes(ADD_TO_FILE)) {
+      const _idx = commandl.indexOf(' this content: ');
+      const filePath = command.substring(ADD_TO_FILE.length + 1, _idx);
+      const content = command.substring(_idx + 15);
+      await addToFile(filePath, content);
+    }
+
+    // Rename a File: <rename the file <path> to <new-path> >
+    if (command.includes(RENAME_FILE)) {
+      const _idx = command.indexOf(' to ');
+      const oldFilePath = command.substring(RENAME_FILE.length + 1, _idx);
+      const newFilePath = command.substring(_idx + 4);
+
+      renameFile(oldFilePath, newFilePath);
     }
   });
 
@@ -57,4 +82,13 @@ const CREATE_A_FILE = 'create a file';
       throw err; // Re-throw any other errors
     }
   }
+
+  // delete File
+  async function deleteFile(filePath) {}
+
+  // rename file
+  async function renameFile(oldPath, newPath) {}
+
+  // Add Content to file
+  async function addToFile(path, content) {}
 })();
