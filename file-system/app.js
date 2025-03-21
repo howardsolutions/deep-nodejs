@@ -44,7 +44,7 @@ const ADD_TO_FILE = 'add to the file';
 
     // Create a File: <add to the file <path> this content: <content> >
     if (command.includes(ADD_TO_FILE)) {
-      const _idx = commandl.indexOf(' this content: ');
+      const _idx = command.indexOf(' this content: ');
       const filePath = command.substring(ADD_TO_FILE.length + 1, _idx);
       const content = command.substring(_idx + 15);
       await addToFile(filePath, content);
@@ -85,7 +85,7 @@ const ADD_TO_FILE = 'add to the file';
   // delete File
   async function deleteFile(filePath) {
     try {
-      // Check if file exists first
+      // Check if file exists first, if not it will throw err => go to the catch block
       await fs.stat(filePath);
 
       // If file exists, delete it
@@ -112,6 +112,24 @@ const ADD_TO_FILE = 'add to the file';
     }
   }
 
-  // Add Content to file
-  async function addToFile(path, content) {}
+  // Add Content !to file
+  var addedContent;
+
+  async function addToFile(path, content) {
+    // prevent write content to the file twice
+    if (addedContent === content) return;
+
+    try {
+      // Open the file and choose "append" mode
+      const fileHandle = await fs.open(path, 'a');
+
+      fileHandle.write(content);
+      addedContent = content;
+
+      console.log('The content added correctly');
+      fileHandle.close();
+    } catch (err) {
+      console.log('An error occured while writing to the file');
+    }
+  }
 })();
