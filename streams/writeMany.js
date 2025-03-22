@@ -1,23 +1,34 @@
 const fs = require('node:fs/promises');
 
-// (async () => {
-//   const fileHandler = await fs.open('text.txt', 'w');
-
-//   for (let i = 0; i < 100; i++) {
-//     await fileHandler.write(` ${i} `);
-//   }
-// })();
-
-(async () => { 
+(async () => {
   console.time('writeMany');
   const fileHandler = await fs.open('text.txt', 'w');
 
   const stream = fileHandler.createWriteStream();
 
-  for (let i = 0; i < 1000; i++) {
-    const buff = Buffer.from(` ${i} `, 'utf-8');
-    stream.write(buff);
+  let i = 0;
+
+  function writeMany() {
+    while (i < 10000) {
+      const buffer = Buffer.from(` ${i} `, 'utf-8');
+
+      if (i === 9999) stream.end(buffer);
+
+      if (stream.write(buffer) === false) {
+        i++;
+        break;
+      }
+
+      i++;
+    }
   }
 
-  console.timeEnd('writeMany');
+  stream.on('drain', () => {
+    writeMany();
+  });
+
+  stream.on('end', () => {
+    console.timeEnd('writeMany');
+    fileHandler.close();
+  });
 })();
