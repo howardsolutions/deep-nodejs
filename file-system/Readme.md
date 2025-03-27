@@ -28,7 +28,7 @@ When you OPEN the file, you're NOT REALLY READING A FILE, you just SAVING A NUMB
 
 - length : The numer of bytes to read.
 
-- position: default set to NULL. the location where to begin reading from thefile.
+- position: default set to NULL. the location where to begin reading from the file.
 
 If `null` data will be read from the current file position AND the position will be UPDATED. 
 
